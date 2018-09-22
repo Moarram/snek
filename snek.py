@@ -1,24 +1,24 @@
 import pygame
 import random as r
 
-unit = 100 # size of individual square in pixels
-count_w = 10 # width in units
-count_h = 10 # height in units
-font_size = 20
+UNIT = 70 # size of individual square in pixels
+COUNT_W = 10 # width in units
+COUNT_H = 10 # height in units
+FONT_SIZE = 20
 
-framerate = 60 # frames per second
-speed = 20 # number of frames between movement (greater than 0)
-tail_growth = 5 # increase in tail length for each food eaten
-starting_tail_length = 5 # starting length of tail
+FRAMERATE = 60 # frames per second
+SPEED = 20 # number of frames between movement (greater than 0)
+TAIL_GROWTH = 5 # increase in tail length for each food eaten
+STARTING_TAIL_LENGTH = 5 # starting length of tail
 
-width = count_w * unit # screen width in pixels
-height = count_h * unit + font_size # screen height in pixels
-max = count_w * count_h
+width = COUNT_W * UNIT # screen width in pixels
+height = COUNT_H * UNIT + FONT_SIZE # screen height in pixels
+max = COUNT_W * COUNT_H
 
 pygame.init()
 pygame.display.set_caption("snek.py")
 screen = pygame.display.set_mode((width, height)) # initialize game window
-font = pygame.font.SysFont("consolas", font_size)
+font = pygame.font.SysFont("consolas", FONT_SIZE)
 clock = pygame.time.Clock()
 
 x = int
@@ -38,12 +38,12 @@ def reset_globals():
 	y = 0
 	food_eaten = 0
 	tail = [(x, y)]
-	tail_length = starting_tail_length
+	tail_length = STARTING_TAIL_LENGTH
 
 def off_screen(x, y):
-	if x < 0 or x > count_w - 1: # x location is out of bounds
+	if x < 0 or x > COUNT_W - 1: # x location is out of bounds
 		return True
-	if y < 0 or y > count_h - 1: # y location is out of bounds
+	if y < 0 or y > COUNT_H - 1: # y location is out of bounds
 		return True
 	return False # x and y are on screen
 
@@ -54,8 +54,8 @@ def on_tail(x, y):
 	
 def food():
 	while True: # keep trying to find valid coordinates (we must be sure there are free spaces before calling this function or we will get an infinite loop)
-		x = r.randint(0, count_w - 1)
-		y = r.randint(0, count_h - 1)
+		x = r.randint(0, COUNT_W - 1)
+		y = r.randint(0, COUNT_H - 1)
 		if ((x, y)) not in tail: # coordinates are in free space
 			return (x, y)
 
@@ -66,7 +66,7 @@ def food_check(x, y):
 	global tail_length
 	global food_eaten
 	if food_location == (x, y): # if we happen to be on the food
-		tail_length += tail_growth # max tail size increases
+		tail_length += TAIL_GROWTH # max tail size increases
 		food_eaten += 1
 		print("Yum! You are now", tail_length, "snek units long.")
 		food_location = food() # get a new food location
@@ -90,11 +90,11 @@ def draw_tail():
 		if red < 0: red = 0
 		green = 255 - 255 * (i / max) # green moves from 255 to 0 over max snek length
 		if green < 0: green = 0
-		pygame.draw.rect(screen, (red, green, 255), pygame.Rect(tail[i][0] * unit, tail[i][1] * unit + font_size, unit, unit)) # multiply by unit to make squares the right size
+		pygame.draw.rect(screen, (red, green, 255), pygame.Rect(tail[i][0] * UNIT, tail[i][1] * UNIT + FONT_SIZE, UNIT, UNIT)) # multiply by UNIT to make squares the right size
 
 def draw():
 	screen.fill((0, 0, 0)) # fill screen with black so we can re-draw from scratch
-	pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(food_location[0] * unit, food_location[1] * unit + font_size, unit, unit)) # put food on the screen
+	pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(food_location[0] * UNIT, food_location[1] * UNIT + FONT_SIZE, UNIT, UNIT)) # put food on the screen
 	draw_tail()
 	
 	length_text = font.render("Length: {} ".format(len(tail)), True, (255, 255, 255))
@@ -131,8 +131,8 @@ def finish(text):
 	
 	buffer = 5
 	message = font.render("Press [Space] to restart", True, (255, 255, 255))
-	pygame.draw.rect(screen, (0, 0, 0),  pygame.Rect(width // 2 - message.get_width() // 2 - buffer, height // 2 - message.get_height() // 2 - buffer + font_size + 2 * buffer, message.get_width() + buffer * 2, message.get_height() + buffer * 2))
-	screen.blit(message, (width // 2 - message.get_width() // 2, height // 2 - message.get_height() // 2 + font_size + 2 * buffer))
+	pygame.draw.rect(screen, (0, 0, 0),  pygame.Rect(width // 2 - message.get_width() // 2 - buffer, height // 2 - message.get_height() // 2 - buffer + FONT_SIZE + 2 * buffer, message.get_width() + buffer * 2, message.get_height() + buffer * 2))
+	screen.blit(message, (width // 2 - message.get_width() // 2, height // 2 - message.get_height() // 2 + FONT_SIZE + 2 * buffer))
 	
 	display_message(text)
 	
@@ -142,7 +142,7 @@ def finish(text):
 				return True
 			if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
 				return False
-		clock.tick(framerate) # wait for 1/framerate seconds
+		clock.tick(FRAMERATE) # wait for 1/FRAMERATE seconds
 		
 
 def play():
@@ -171,7 +171,7 @@ def play():
 		if pressed[pygame.K_LEFT] and prev_direction != 0: direction = 2
 		if pressed[pygame.K_RIGHT] and prev_direction != 2: direction = 0
 		
-		if count % speed == 0 and not exit: # if this is a frame we want to act on our input
+		if count % SPEED == 0 and not exit: # if this is a frame we want to act on our input
 			if direction == 3: y -= 1 # up
 			if direction == 1: y += 1 # down 
 			if direction == 2: x -= 1 # left
@@ -202,7 +202,7 @@ def play():
 			
 			count = 0
 			
-		clock.tick(framerate) # wait for 1/framerate seconds
+		clock.tick(FRAMERATE) # wait for 1/FRAMERATE seconds
 	
 	if exit:
 		print("Exiting...")
@@ -221,7 +221,7 @@ def main():
 			if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
 				if not play():
 					done = True
-		clock.tick(framerate) # wait for 1/framerate seconds
+		clock.tick(FRAMERATE) # wait for 1/FRAMERATE seconds
 	print("Application closed.")
 	
 main()

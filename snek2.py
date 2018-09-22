@@ -1,27 +1,36 @@
 import pygame
 import random as r
 
-unit = 40 # size of individual square in pixels
-count_w = 64 # width in units
-count_h = 35 # height in units
-font_size = 20
+UNIT = 40 # size of individual square in pixels
+COUNT_W = 47 # width in units
+COUNT_H = 24 # height in units
+FONT_SIZE = 20
 
-# 40, 63, 33 for full screen
+# 1080p:
+# 40, 47, 24 for full window
+# 40, 48, 26 for fullscreen
 
-framerate = 60 # frames per second
-speed = 10 # number of frames between movement
-tail_growth = 10 # increase in tail length for each food eaten
-starting_tail_length = 20 # starting length of tail
-extra_food_chance = 3 # percent probability of adding extra food
+# 1440p:
+# 40, 63, 33 for full window
+# 40, 64, 35 for fullscreen
 
-width = count_w * unit # screen width in pixels
-height = count_h * unit + font_size # screen height in pixels
-max = count_w * count_h
+FRAMERATE = 60 # frames per second
+SPEED = 10 # number of frames between movement
+TAIL_GROWTH = 10 # increase in tail length for each food eaten
+STARTING_TAIL_LENGTH = 20 # starting length of tail
+EXTRA_FOOD_CHANCE = 3 # percent probability of adding extra food
+
+width = COUNT_W * UNIT # screen width in pixels
+height = COUNT_H * UNIT + FONT_SIZE # screen height in pixels
+max = COUNT_W * COUNT_H
 
 pygame.init()
 pygame.display.set_caption("snek2.py")
-screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN) # initialize game window
-font = pygame.font.SysFont("consolas", font_size)
+
+screen = pygame.display.set_mode((width, height)) # initialize game window
+# screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN) # initialize game window in fullscreen mode
+
+font = pygame.font.SysFont("consolas", FONT_SIZE)
 clock = pygame.time.Clock()
 
 food_locations = []
@@ -41,9 +50,9 @@ class Snek:
 		self.name = name
 		
 	def off_screen(self):
-		if self.x < 0 or self.x > count_w - 1: # x location is out of bounds
+		if self.x < 0 or self.x > COUNT_W - 1: # x location is out of bounds
 			return True
-		if self.y < 0 or self.y > count_h - 1: # y location is out of bounds
+		if self.y < 0 or self.y > COUNT_H - 1: # y location is out of bounds
 			return True
 		return False # x and y are on screen
 	
@@ -60,7 +69,7 @@ class Snek:
 		del self.tail[self.tail_length:] # trim the tail to the right length (by deleting extra from the end)
 		
 	def eat(self):
-		self.tail_length += tail_growth # max tail size increases
+		self.tail_length += TAIL_GROWTH # max tail size increases
 		self.food_eaten += 1
 		print("Yum! " + self.name + " is now", self.tail_length, "snek units long.")
 		
@@ -98,13 +107,13 @@ class Snek:
 			if red < self.color[0]: red = self.color[0]
 			if green < self.color[1]: green = self.color[1]
 			if blue < self.color[2]: blue = self.color[2]
-			pygame.draw.rect(screen, (red, green, blue), pygame.Rect(self.tail[i][0] * unit, self.tail[i][1] * unit + font_size, unit, unit)) # multiply by unit to make squares the right size
+			pygame.draw.rect(screen, (red, green, blue), pygame.Rect(self.tail[i][0] * UNIT, self.tail[i][1] * UNIT + FONT_SIZE, UNIT, UNIT)) # multiply by UNIT to make squares the right size
 
 	
 def food(all_tails):
 	while True: # keep trying to find valid coordinates (we must be sure there are free spaces before calling this function or we will get an infinite loop)
-		x = r.randint(0, count_w - 1)
-		y = r.randint(0, count_h - 1)
+		x = r.randint(0, COUNT_W - 1)
+		y = r.randint(0, COUNT_H - 1)
 		if ((x, y)) not in all_tails: # coordinates are in free space
 			return (x, y)
 
@@ -135,7 +144,7 @@ def win_check(all_tails):
 
 def draw_food():
 	for food in food_locations:
-		pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(food[0] * unit, food[1] * unit + font_size, unit, unit)) # put food on the screen
+		pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(food[0] * UNIT, food[1] * UNIT + FONT_SIZE, UNIT, UNIT)) # put food on the screen
 	
 def draw_header(snek, position):
 	next_pos = position
@@ -150,7 +159,7 @@ def draw_header(snek, position):
 	if snek.tail_length - len(snek.tail) > 0:
 		extra_food_text = font.render("+{:<2} ".format(snek.tail_length - len(snek.tail)), True, (255, 0, 0))
 		screen.blit(extra_food_text, (next_pos, 0))
-	next_pos = position + name_text.get_width() + font_size * 10
+	next_pos = position + name_text.get_width() + FONT_SIZE * 10
 	
 	food_text = font.render("Food eaten: " + str(snek.food_eaten), True, white)
 	screen.blit(food_text, (next_pos, 0))
@@ -175,7 +184,7 @@ def finish():
 				return True
 			if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
 				return False
-		clock.tick(framerate) # wait for 1/framerate seconds
+		clock.tick(FRAMERATE) # wait for 1/FRAMERATE seconds
 		
 
 def play():	
@@ -186,13 +195,13 @@ def play():
 	snek_2_crash = False
 	
 	global food_locations
-	food_locations = [(count_w // 2, count_h // 2)]
+	food_locations = [(COUNT_W // 2, COUNT_H // 2)]
 	
 	print(" ")
 	print("New snek game commencing:")
 	
-	snek_1 = Snek("Snek 1", (240, 240, 60), (count_w - 1, count_h - 1), starting_tail_length)
-	snek_2 = Snek("Snek 2", (240, 60, 240), (0, 0), starting_tail_length)
+	snek_1 = Snek("Snek 1", (240, 240, 60), (COUNT_W - 1, COUNT_H - 1), STARTING_TAIL_LENGTH)
+	snek_2 = Snek("Snek 2", (240, 60, 240), (0, 0), STARTING_TAIL_LENGTH)
 
 	exit = False
 	done = False
@@ -214,7 +223,7 @@ def play():
 		if pressed[pygame.K_a] and snek_2.prev_direction != 0: direction_2 = 2
 		if pressed[pygame.K_d] and snek_2.prev_direction != 2: direction_2 = 0
 		
-		if count % speed == 0 and not exit: # if this is a frame we want to act on our input
+		if count % SPEED == 0 and not exit: # if this is a frame we want to act on our input
 			if not snek_1.update(direction_1):
 				snek_1_crash = True
 				
@@ -270,7 +279,7 @@ def play():
 					food_locations.append(food(snek_1.tail + snek_2.tail)) # get a new food location
 				if food_check(snek_2): # manage food
 					food_locations.append(food(snek_1.tail + snek_2.tail)) # get a new food location
-				if r.randint(0, 99) < extra_food_chance:
+				if r.randint(0, 99) < EXTRA_FOOD_CHANCE:
 					food_locations.append(food(snek_1.tail + snek_2.tail)) # get a new food location
 					
 				screen.fill((0, 0, 0)) # fill screen with black so we can re-draw from scratch
@@ -283,7 +292,7 @@ def play():
 				
 			count = 0
 			
-		clock.tick(framerate) # wait for 1/framerate seconds
+		clock.tick(FRAMERATE) # wait for 1/FRAMERATE seconds
 	
 	if exit:
 		print("Exiting...")
@@ -302,10 +311,7 @@ def main():
 			if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
 				if not play():
 					done = True
-		clock.tick(framerate) # wait for 1/framerate seconds
+		clock.tick(FRAMERATE) # wait for 1/FRAMERATE seconds
 	print("Application closed.")
 	
 main()
-			
-	
-	
