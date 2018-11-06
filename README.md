@@ -11,9 +11,13 @@ Single player game of snake
 
 Move with arrow keys. Edit file to change speed, window size, number of tiles, etc.
 
+![pic 1](https://i.gyazo.com/a5aea28cfab05bf86bb0b8af1fe373cf.png)
+
 ## snek2.py
 Dual player game of snake
 
 Left snake moves with WASD, right snake moves with arrow keys.
 
 Edit file to change speed, window size, number of tiles, food spawn rate, colors, etc.
+
+![pic 2](https://i.gyazo.com/690c1e7f98f081e96d00e67dd7e9f5ba.png)
