@@ -6,6 +6,8 @@ Python 3.7
 
 Pygame module (run "pip3 install pygame" or "pip install pygame")
 
+Only tested on Windows
+
 ## snek.py
 Single player game of snake
 
